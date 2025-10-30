@@ -1,0 +1,659 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ultimate Student Registration</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Verdana, sans-serif;
+        }
+        
+        :root {
+            --primary: #6a11cb;
+            --secondary: #2575fc;
+            --accent: #ff2e63;
+            --light: #f5f7fa;
+            --dark: #1a1a2e;
+            --success: #00b894;
+        }
+        
+        body {
+            background: linear-gradient(-45deg, #ee7752, #e73c7e, #23a6d5, #23d5ab);
+            background-size: 400% 400%;
+            animation: gradient 15s ease infinite;
+            color: var(--light);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+        
+        @keyframes gradient {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+        
+        .container {
+            width: 100%;
+            max-width: 1100px;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            perspective: 1000px;
+        }
+        
+        @media (max-width: 900px) {
+            .container {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        .card {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transform-style: preserve-3d;
+            transition: transform 0.5s ease;
+        }
+        
+        .card:hover {
+            transform: translateY(-10px) rotateX(5deg);
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        .logo {
+            font-size: 2.5rem;
+            color: var(--light);
+            margin-bottom: 15px;
+            display: inline-block;
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); }
+        }
+        
+        h1 {
+            font-size: 2.2rem;
+            margin-bottom: 10px;
+            background: linear-gradient(to right, #fff, #a8edea);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+        }
+        
+        h2 {
+            font-size: 1.5rem;
+            margin-bottom: 20px;
+            color: var(--light);
+            position: relative;
+            display: inline-block;
+        }
+        
+        h2:after {
+            content: '';
+            position: absolute;
+            bottom: -8px;
+            left: 0;
+            width: 50px;
+            height: 3px;
+            background: var(--accent);
+            border-radius: 3px;
+        }
+        
+        .form-group {
+            margin-bottom: 25px;
+            position: relative;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: var(--light);
+            transition: all 0.3s;
+        }
+        
+        .input-with-icon {
+            position: relative;
+        }
+        
+        .input-with-icon i {
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: rgba(255, 255, 255, 0.7);
+            transition: all 0.3s;
+        }
+        
+        input, select {
+            width: 100%;
+            padding: 15px 15px 15px 45px;
+            background: rgba(255, 255, 255, 0.1);
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            border-radius: 10px;
+            font-size: 16px;
+            color: var(--light);
+            transition: all 0.3s;
+        }
+        
+        input:focus, select:focus {
+            border-color: var(--accent);
+            box-shadow: 0 0 0 3px rgba(255, 46, 99, 0.3);
+            outline: none;
+            background: rgba(255, 255, 255, 0.15);
+        }
+        
+        input:focus + i {
+            color: var(--accent);
+            transform: translateY(-50%) scale(1.2);
+        }
+        
+        input::placeholder {
+            color: rgba(255, 255, 255, 0.6);
+        }
+        
+        .radio-group {
+            display: flex;
+            gap: 20px;
+            margin-top: 10px;
+        }
+        
+        .radio-option {
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+        }
+        
+        .radio-option input {
+            width: auto;
+            margin-right: 8px;
+            cursor: pointer;
+        }
+        
+        .btn {
+            display: inline-block;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            border: none;
+            padding: 16px 35px;
+            border-radius: 50px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.4s;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+        }
+        
+        .btn:before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(48, 70, 155, 0.2), transparent);
+            transition: 0.5s;
+        }
+        
+        .btn:hover:before {
+            left: 100%;
+        }
+        
+        .btn:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 25px rgba(1, 7, 45, 0.3);
+        }
+        
+        .btn:active {
+            transform: translateY(-2px);
+        }
+        
+        .search-form {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .search-form input {
+            flex: 1;
+        }
+        
+        .floating-elements {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: -1;
+        }
+        
+        .floating-element {
+            position: absolute;
+            background: rgba(4, 73, 146, 0.1);
+            border-radius: 50%;
+            animation: float 15s infinite linear;
+        }
+        
+        @keyframes float {
+            0% { transform: translateY(0) rotate(0deg); }
+            100% { transform: translateY(-1000px) rotate(720deg); }
+        }
+        
+        .progress-bar {
+            height: 5px;
+            background: rgba(3, 91, 68, 0.2);
+            border-radius: 5px;
+            margin-bottom: 30px;
+            overflow: hidden;
+        }
+        
+        .progress {
+            height: 100%;
+            background: linear-gradient(to right, var(--primary), var(--accent));
+            border-radius: 5px;
+            width: 60%;
+            animation: progress 2s ease-in-out infinite alternate;
+        }
+        
+        @keyframes progress {
+            0% { width: 60%; }
+            100% { width: 90%; }
+        }
+        
+        .particles {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: -2;
+        }
+        
+        .particle {
+            position: absolute;
+            background: rgba(1, 7, 75, 0.5);
+            border-radius: 50%;
+            animation: particle-float 20s infinite linear;
+        }
+        
+        @keyframes particle-float {
+            0% { transform: translateY(100vh) rotate(0deg); opacity: 0; }
+            10% { opacity: 1; }
+            90% { opacity: 1; }
+            100% { transform: translateY(-100px) rotate(360deg); opacity: 0; }
+        }
+        
+        footer {
+            text-align: center;
+            margin-top: 30px;
+            padding-top: 20px;
+            color: rgba(0, 0, 0, 0.7);
+            font-size: 0.9rem;
+            border-top: 1px solid rgba(133, 64, 64, 0.1);
+        }
+        
+        .form-section {
+            margin-bottom: 30px;
+        }
+        
+        .success-checkmark {
+            text-align: center;
+            margin: 20px 0;
+            animation: bounce 0.5s;
+            display: none;
+        }
+        
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% {transform: translateY(0);}
+            40% {transform: translateY(-10px);}
+            60% {transform: translateY(-5px);}
+        }
+        
+        .success-checkmark i {
+            font-size: 4rem;
+            color: var(--success);
+        }
+        
+        /* Create floating elements with pure CSS */
+        .floating-elements .floating-element:nth-child(1) {
+            width: 80px;
+            height: 80px;
+            left: 10%;
+            animation-delay: 0s;
+            background: rgba(38, 152, 106, 0.05);
+        }
+        
+        .floating-elements .floating-element:nth-child(2) {
+            width: 120px;
+            height: 120px;
+            left: 25%;
+            animation-delay: 2s;
+            background: rgba(5, 233, 207, 0.08);
+        }
+        
+        .floating-elements .floating-element:nth-child(3) {
+            width: 60px;
+            height: 60px;
+            left: 40%;
+            animation-delay: 4s;
+            background: rgba(81, 83, 218, 0.03);
+        }
+        
+        .floating-elements .floating-element:nth-child(4) {
+            width: 100px;
+            height: 100px;
+            left: 55%;
+            animation-delay: 6s;
+            background: rgba(12, 120, 192, 0.06);
+        }
+        
+        .floating-elements .floating-element:nth-child(5) {
+            width: 70px;
+            height: 70px;
+            left: 70%;
+            animation-delay: 8s;
+            background: rgba(98, 2, 234, 0.04);
+        }
+        
+        .floating-elements .floating-element:nth-child(6) {
+            width: 90px;
+            height: 90px;
+            left: 85%;
+            animation-delay: 10s;
+            background: rgba(0, 13, 76, 0.07);
+        }
+        
+        /* Create particles with pure CSS */
+        .particles .particle:nth-child(1) {
+            width: 5px;
+            height: 5px;
+            left: 5%;
+            animation-delay: 0s;
+        }
+        
+        .particles .particle:nth-child(2) {
+            width: 8px;
+            height: 8px;
+            left: 15%;
+            animation-delay: 1s;
+        }
+        
+        .particles .particle:nth-child(3) {
+            width: 4px;
+            height: 4px;
+            left: 25%;
+            animation-delay: 2s;
+        }
+        
+        .particles .particle:nth-child(4) {
+            width: 7px;
+            height: 7px;
+            left: 35%;
+            animation-delay: 3s;
+        }
+        
+        .particles .particle:nth-child(5) {
+            width: 6px;
+            height: 6px;
+            left: 45%;
+            animation-delay: 4s;
+        }
+        
+        .particles .particle:nth-child(6) {
+            width: 9px;
+            height: 9px;
+            left: 55%;
+            animation-delay: 5s;
+        }
+        
+        .particles .particle:nth-child(7) {
+            width: 5px;
+            height: 5px;
+            left: 65%;
+            animation-delay: 6s;
+        }
+        
+        .particles .particle:nth-child(8) {
+            width: 7px;
+            height: 7px;
+            left: 75%;
+            animation-delay: 7s;
+        }
+        
+        .particles .particle:nth-child(9) {
+            width: 6px;
+            height: 6px;
+            left: 85%;
+            animation-delay: 8s;
+        }
+        
+        .particles .particle:nth-child(10) {
+            width: 8px;
+            height: 8px;
+            left: 95%;
+            animation-delay: 9s;
+        }
+        
+        /* Form submission animation */
+        #registrationForm:target .success-checkmark {
+            display: block;
+        }
+        
+        #registrationForm:target .btn {
+            display: none;
+        }
+        
+        /* Focus states for better UX */
+        input:focus ~ label,
+        select:focus ~ label {
+            color: var(--accent);
+        }
+        
+        /* Custom checkbox styling */
+        .radio-option input[type="radio"] {
+            appearance: none;
+            -webkit-appearance: none;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            border: 2px solid rgba(0, 0, 0, 0.5);
+            outline: none;
+            transition: all 0.3s;
+            position: relative;
+        }
+        
+        .radio-option input[type="radio"]:checked {
+            border-color: var(--accent);
+            background: var(--accent);
+        }
+        
+        .radio-option input[type="radio"]:checked::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: rgb(243, 241, 241);
+        }
+    </style>
+</head>
+<body>
+    <div class="floating-elements">
+        <div class="floating-element"></div>
+        <div class="floating-element"></div>
+        <div class="floating-element"></div>
+        <div class="floating-element"></div>
+        <div class="floating-element"></div>
+        <div class="floating-element"></div>
+    </div>
+    
+    <div class="particles">
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+    </div>
+    
+    <div class="container">
+        <!-- Registration Form Card -->
+        <div class="card">
+            <div class="header">
+                <div class="logo">
+                    <i class="fas fa-graduation-cap"></i>
+                </div>
+                <h1>Student Registration</h1>
+                <p>Join our elite student community today</p>
+            </div>
+            
+            <div class="progress-bar">
+                <div class="progress"></div>
+            </div>
+            
+            <div class="form-section">
+                <h2>Registration Form</h2>
+                <form id="registrationForm" method="POST" action="">
+                    <div class="form-group">
+                        <label for="first_name">First Name</label>
+                        <div class="input-with-icon">
+                            <input type="text" id="first_name" name="first_name" placeholder="Enter your first name" required>
+                            <i class="fas fa-user"></i>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="last_name">Last Name</label>
+                        <div class="input-with-icon">
+                            <input type="text" id="last_name" name="last_name" placeholder="Enter your last name" required>
+                            <i class="fas fa-user-tag"></i>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="gender">Gender</label>
+                        <div class="radio-group">
+                            <div class="radio-option">
+                                <input type="radio" id="male" name="gender" value="male" required>
+                                <label for="male">Male</label>
+                            </div>
+                            <div class="radio-option">
+                                <input type="radio" id="female" name="gender" value="female">
+                                <label for="female">Female</label>
+                            </div>
+                            <div class="radio-option">
+                                <input type="radio" id="other" name="gender" value="other">
+                                <label for="other">Other</label>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="date_of_birth">Date of Birth</label>
+                        <div class="input-with-icon">
+                            <input type="date" id="date_of_birth" name="date_of_birth" required>
+                            <i class="fas fa-calendar-alt"></i>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="email">Email</label>
+                        <div class="input-with-icon">
+                            <input type="email" id="email" name="email" placeholder="Enter your email address" required>
+                            <i class="fas fa-envelope"></i>
+                        </div>
+                    </div>
+                    
+                    <button type="submit" class="btn">
+                        <i class="fas fa-paper-plane"></i> Submit Registration
+                    </button>
+                    
+                    <div class="success-checkmark">
+                        <i class="fas fa-check-circle"></i>
+                        <p>Registration Successful!</p>
+                    </div>
+                </form>
+            </div>
+        </div>
+        
+        <!-- Search Form Card -->
+        <div class="card">
+            <div class="header">
+                <div class="logo">
+                    <i class="fas fa-search"></i>
+                </div>
+                <h1>Student Search</h1>
+                <p>Find students in our database</p>
+            </div>
+            
+            <div class="form-section">
+                <h2>Search Students</h2>
+                <form method="GET" action="#" class="search-form">
+                    <div class="input-with-icon" style="flex: 1;">
+                        <input type="text" name="search_name" placeholder="Enter name to search..." required>
+                        <i class="fas fa-search"></i>
+                    </div>
+                    <button type="submit" class="btn">
+                        <i class="fas fa-search"></i> Search
+                    </button>
+                </form>
+            </div>
+            
+            <div class="form-section">
+                <h2>Why Register With Us?</h2>
+                <ul style="list-style-type: none; margin-top: 20px;">
+                    <li style="margin-bottom: 15px; padding-left: 30px; position: relative;">
+                        <i class="fas fa-check" style="color: var(--success); position: absolute; left: 0;"></i>
+                        Access to exclusive student resources
+                    </li>
+                    <li style="margin-bottom: 15px; padding-left: 30px; position: relative;">
+                        <i class="fas fa-check" style="color: var(--success); position: absolute; left: 0;"></i>
+                        Connect with peers and mentors
+                    </li>
+                    <li style="margin-bottom: 15px; padding-left: 30px; position: relative;">
+                        <i class="fas fa-check" style="color: var(--success); position: absolute; left: 0;"></i>
+                        Get notified about important events
+                    </li>
+                    <li style="margin-bottom: 15px; padding-left: 30px; position: relative;">
+                        <i class="fas fa-check" style="color: var(--success); position: absolute; left: 0;"></i>
+                        Priority access to career opportunities
+                    </li>
+                </ul>
+            </div>
+            
+            <footer>
+                <p>Student Registration System &copy; 2025 Gazelle Pearson | Form Exercise</p>
+            </footer>
+        </div>
+    </div>
+</body>
+</html>
